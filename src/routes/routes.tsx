@@ -5,11 +5,9 @@ import Login from "../pages/Login";
 import Contact from "../pages/Contact";
 import About from "../pages/About";
 import Register from "../pages/Register";
-import AdminDashboard from "../pages/admin/AdminDashboard";
-import CreateStudent from "../pages/admin/CreateStudent";
-
-import CreateAdmin from "../pages/admin/CreateAdmin";
-import CreateFaculty from "../pages/admin/CreateFaculty";
+import { genereicRoutes } from "../utils/RoutesNavmenuGenerator";
+import { adminInfo } from "./Admin.Routes";
+import { facultyPaths } from "./Faculty.Routes";
 
 const router = createBrowserRouter([
   {
@@ -37,26 +35,12 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <App />,
-    children: [
-      {
-        path: "/admin",
-        index: true,
-        element: <AdminDashboard />,
-      },
-
-      {
-        path: "create-student",
-        element: <CreateStudent />,
-      },
-      {
-        path: "create-admin",
-        element: <CreateAdmin />,
-      },
-      {
-        path: "create-faculty",
-        element: <CreateFaculty />,
-      },
-    ],
+    children: genereicRoutes(adminInfo),
+  },
+  {
+    path: "/faculty",
+    element: <App />,
+    children: genereicRoutes(facultyPaths),
   },
 ]);
 
