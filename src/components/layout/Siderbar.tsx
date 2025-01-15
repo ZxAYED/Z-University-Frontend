@@ -1,6 +1,7 @@
 import { genericNavMenus } from "../../utils/RoutesNavmenuGenerator";
 import { adminInfo } from "../../routes/Admin.Routes";
-import { Layout, Menu } from "antd";
+import { Button, Layout, Menu } from "antd";
+import { NavLink } from "react-router-dom";
 
 const { Sider } = Layout;
 
@@ -51,6 +52,9 @@ export default function Siderbar() {
         defaultSelectedKeys={["1"]}
         items={sidebarItems}
       />
+      <Button>
+        <NavLink to="/login"> Login</NavLink>
+      </Button>
     </Sider>
   );
 }
