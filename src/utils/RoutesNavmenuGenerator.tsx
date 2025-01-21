@@ -48,21 +48,19 @@ export const genereicRoutes = (items: IItem[]) => {
 
 export const genericNavMenus = (items: INavMenu[], role: string) => {
   const Navmenu: INavMenu[] = items.reduce((acc, item) => {
-    if (item.path && item.name) {
+    if (item.path && item.name && !item.children) {
       acc.push({
-        label: <NavLink to={`/${role}/${item?.path}`}>{item.name}</NavLink>,
+        label: <NavLink to={`/${role}/${item.path}`}>{item.name}</NavLink>,
         icon: item.icon,
         key: item.name,
       });
-    }
-    if (item.children) {
-  
+    } else if (item.name && item.children) {
       acc.push({
-        label: <NavLink to={`/${role}/${item?.path}`}>{item.name}</NavLink>,
+        label: item.name,
         icon: item.icon,
         key: item.name,
         children: item.children.map((child) => ({
-          label: <NavLink to={`/${role}/${child.path}`}> {child.name}</NavLink>,
+          label: <NavLink to={`/${role}/${child.path}`}>{child.name}</NavLink>,
           icon: child.icon,
           key: child.name,
         })),

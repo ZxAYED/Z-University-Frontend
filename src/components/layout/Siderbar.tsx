@@ -2,27 +2,35 @@ import { genericNavMenus } from "../../utils/RoutesNavmenuGenerator";
 import { adminInfo } from "../../routes/Admin.Routes";
 import { Button, Layout, Menu } from "antd";
 import { NavLink } from "react-router-dom";
+import { useAppSelector } from "../../redux/hook";
+import { IUser, selectCurrentUser } from "../../redux/features/auth/authSlice";
+import { facultyPaths } from "../../routes/Faculty.Routes";
 
 const { Sider } = Layout;
 
 export default function Siderbar() {
   const userRole = {
     ADMIN: "admin",
+    SUPERADMIN: "superAdmin",
     FACULTY: "faculty",
     STUDENT: "student",
   };
   let sidebarItems;
-  const role = userRole.ADMIN;
-  console.log(genericNavMenus(adminInfo, userRole.ADMIN));
-  switch (role) {
+
+  const user = useAppSelector(selectCurrentUser) as IUser;
+
+  switch (user?.role) {
     case userRole.ADMIN:
       sidebarItems = genericNavMenus(adminInfo, userRole.ADMIN);
       break;
     case userRole.FACULTY:
-      sidebarItems = genericNavMenus(adminInfo, userRole.FACULTY);
+      sidebarItems = genericNavMenus(facultyPaths, userRole.FACULTY);
       break;
     case userRole.STUDENT:
       sidebarItems = genericNavMenus(adminInfo, userRole.STUDENT);
+      break;
+    case userRole.SUPERADMIN:
+      sidebarItems = genericNavMenus(adminInfo, userRole.ADMIN);
       break;
 
     default:
@@ -30,7 +38,7 @@ export default function Siderbar() {
   }
 
   return (
-    <Sider>
+    <Sider width={"280px"}>
       <div
         style={{
           display: "flex",
@@ -38,7 +46,7 @@ export default function Siderbar() {
           justifyContent: "center",
           color: "white",
           fontSize: "1.3rem",
-          padding: "6px 0 6px 0",
+          padding: "12px 0 6px 0",
           fontWeight: 700,
         }}
       >

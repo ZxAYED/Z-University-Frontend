@@ -1,45 +1,69 @@
-import { Button } from "antd";
-import { useForm } from "react-hook-form";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Button, Row } from "antd";
+import { FieldValues } from "react-hook-form";
 import { useLoginMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hook";
-import { setUser } from "../redux/features/auth/authSlice";
+import { IUser, setUser } from "../redux/features/auth/authSlice";
 import VerifyToken from "../utils/VerifyToken";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import ZForm from "../components/ui/ZForm";
+import ZInput from "./../components/ui/ZInput";
 
 const Login = () => {
-  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
   const [login, { error, isLoading }] = useLoginMutation();
   const dispatch = useAppDispatch();
-  const onSumbit = async (data) => {
+
+  const onSumbit = async (data: FieldValues) => {
+    const toastID = toast.loading("Loggin in", {
+      duration: 2500,
+      position: "top-right",
+    });
     const userInfo = {
       id: data.id,
       password: data.password,
     };
-    const res = await login(userInfo).unwrap();
-    const user = VerifyToken(res.data.accessToken);
-    dispatch(setUser({ user, token: res.data.accessToken }));
+
+    try {
+      const res = await login(userInfo).unwrap();
+      const user = VerifyToken(res.data.accessToken) as IUser;
+      dispatch(setUser({ user, token: res.data.accessToken }));
+      toast.success("Logged in successfull", {
+        id: toastID,
+        duration: 2500,
+        position: "top-right",
+      });
+      if (user?.role === "superAdmin") {
+        navigate(`/admin/dashboard`);
+      } else {
+        navigate(`/${user.role}/dashboard`);
+      }
+    } catch (err: any) {
+      toast.error(`${err?.data?.message}`, {
+        id: toastID,
+        duration: 2500,
+        position: "top-right",
+      });
+    }
   };
+
   return (
-    <form onSubmit={handleSubmit(onSumbit)}>
-      <div>
-        <label htmlFor="id">ID:</label>
-        <input
-          id="id"
-          {...register("id")}
-          placeholder="type here"
-          type="text"
-        ></input>
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          id="password"
-          {...register("password")}
-          placeholder="type here"
-          type="text"
-        ></input>
-        <Button htmlType="submit">Log In</Button>
-      </div>
-    </form>
+    <Row
+      justify={"center"}
+      align={"middle"}
+      style={{ height: "100dvh", width: "full" }}
+    >
+      <ZForm onSubmit={onSumbit}>
+        <div>
+          <ZInput type="text" name="id" label={"ID :"}></ZInput>
+        </div>
+        <div>
+          <ZInput type="text" name="password" label={"Password :"}></ZInput>
+          <Button htmlType="submit">Log In</Button>
+        </div>
+      </ZForm>
+    </Row>
   );
 };
 export default Login;
