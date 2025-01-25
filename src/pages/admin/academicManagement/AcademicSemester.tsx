@@ -1,27 +1,124 @@
-import { FieldValues, SubmitHandler } from "react-hook-form";
-import ZForm from "../../../components/ui/ZForm";
-import ZInput from "../../../components/ui/ZInput";
-import { useGetAllSemesterQuery } from "../../../redux/features/academicSemester/academicSemesterApi";
-import { Button, Col, Flex } from "antd";
+import { Button, Table, TableColumnsType, TableProps } from "antd";
+import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicSemesterApi";
+import { filterParams, IAcademicSemester } from "../../../types/global";
+import { SetStateAction, useState } from "react";
+import { yearOptionsForFilter } from "./Academic.constants";
 
-export default function AcademicSemester() {
-  const { data } = useGetAllSemesterQuery(undefined);
-  console.log(data);
+type TDataType = Pick<
+  IAcademicSemester,
+  "name" | "year" | "startMonth" | "endMonth"
+>;
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+const AcademicSemester = () => {
+  const [queryParams, setqueryParams] = useState([]);
+  const {
+    data: semesterData,
+    isLoading,
+    isFetching,
+  } = useGetAllSemesterQuery(queryParams);
+
+  const tableData = semesterData?.data.map((i) => ({
+    key: i._id,
+    name: i.name,
+    year: i.year,
+    startMonth: i.startMonth,
+    endMonth: i.endMonth,
+  }));
+
+  const columns: TableColumnsType<TDataType> = [
+    {
+      title: "Name",
+      key: "name",
+      dataIndex: "name",
+      showSorterTooltip: { target: "full-header" },
+      filters: [
+        {
+          text: "Autumn",
+          value: "Autumn",
+        },
+        {
+          text: "Summer",
+          value: "Summer",
+        },
+        {
+          text: "Fall",
+          value: "Fall",
+        },
+      ],
+    },
+    {
+      title: "Year",
+      dataIndex: "year",
+      filters: yearOptionsForFilter,
+    },
+    {
+      title: "Start Month",
+      dataIndex: "startMonth",
+      // filters: monthsForFilter,
+    },
+    {
+      title: "End Month",
+      dataIndex: "endMonth",
+      // filters: monthsForFilter,
+    },
+    {
+      title: "Action",
+      render: () => {
+        return (
+          <div>
+            <Button>Update</Button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const onChange: TableProps<TDataType>["onChange"] = (
+    _pagination,
+    filters,
+    _sorter,
+    extra
+  ) => {
+    console.log("params", filters, extra);
+    if (extra.action === "filter") {
+      const params: filterParams[] & SetStateAction<never[]> = [];
+      filters.name?.forEach((i) =>
+        params.push({
+          name: "name",
+          value: i as string,
+        })
+      );
+      filters.year?.forEach((i) =>
+        params.push({
+          name: "year",
+          value: i as string,
+        })
+      );
+      // filters.startMonth?.forEach((i) =>
+      //   params.push({
+      //     name: "year",
+      //     value: i as string,
+      //   })
+      // );
+      // filters.endMonth?.forEach((i) =>
+      //   params.push({
+      //     name: "year",
+      //     value: i as string,
+      //   })
+      // );
+      setqueryParams(params);
+    }
   };
 
   return (
-    <Flex>
-      <Col span="8">
-        <ZForm onSubmit={onSubmit}>
-          <ZInput type="text" name="Name" label="Name"></ZInput>
-          <ZInput type="text" name="Year" label="year"></ZInput>
-          <ZInput type="text" name="s" label="s"></ZInput>
-          <Button htmlType="submit"> Submit</Button>
-        </ZForm>
-      </Col>
-    </Flex>
+    <Table<TDataType>
+      loading={isFetching || isLoading}
+      columns={columns}
+      dataSource={tableData}
+      onChange={onChange}
+      showSorterTooltip={{ target: "sorter-icon" }}
+    />
   );
-}
+};
+
+export default AcademicSemester;

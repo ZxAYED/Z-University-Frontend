@@ -38,7 +38,10 @@ export default function Siderbar() {
   }
 
   return (
-    <Sider width={"280px"}>
+    <Sider
+      width={"280px"}
+      style={{ height: "100dvh", position: "sticky", top: "0", left: "0" }}
+    >
       <div
         style={{
           display: "flex",
