@@ -8,6 +8,41 @@ interface IError {
     },
     status: number
 }
+export interface IStudent {
+    _id: string,
+    id: number,
+    fullName: string,
+    name: {
+        firstName: string;
+        middleName: string;
+        lastName: string;
+    };
+    academicSemester: string;
+    academicDepartment: string;
+    gender: string;
+    dateOfBirth: string;
+    email: string;
+    contactNo: string;
+    emergencyContactNo: string;
+    bloodGroup: string;
+    presentAddress: string;
+    permanentAddress: string;
+    guardian: {
+        fatherName: string;
+        fatherOccupation: string;
+        fatherContactNo: string;
+        motherName: string;
+        motherOccupation: string;
+        motherContactNo: string;
+    };
+    localGuardian: {
+        name: string;
+        occupation: string;
+        contactNo: string;
+        address: string;
+    };
+    profileImg: string;
+};
 export interface filterParams { name: string; value: string; }
 export interface IAcademicSemester {
     _id: string,
