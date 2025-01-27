@@ -1,15 +1,15 @@
 import { LuUserRoundPlus } from "react-icons/lu";
 import AdminDashboard from "../pages/admin/AdminDashboard";
-import CreateAdmin from "../pages/admin/CreateAdmin";
-import CreateStudent from "../pages/admin/CreateStudent";
-import CreateFaculty from "../pages/admin/CreateFaculty";
-import { ImUserTie } from "react-icons/im";
-import { RiAdminLine } from "react-icons/ri";
+
 import { UserOutlined } from "@ant-design/icons";
 import AcademicSemester from "../pages/admin/academicManagement/AcademicSemester";
 import CreateAcademicSemester from "../pages/admin/academicManagement/CreateAcademicSemester";
 import CreateAcademicFaculty from "../pages/admin/academicManagement/CreateAcademicFaculty";
 import CreateAcademicDepartment from "../pages/admin/academicManagement/CreateAcademicDepartment";
+import CreateStudent from "../pages/admin/userManagement/CreateStudent";
+import CreateAdmin from "../pages/admin/userManagement/CreateAdmin";
+import CreateFaculty from "../pages/admin/userManagement/CreateFaculty";
+import StudentsData from "../pages/admin/userManagement/student/StudentsData";
 
 export const adminInfo = [
   {
@@ -72,6 +72,11 @@ export const adminInfo = [
         path: "create-student",
 
         element: <CreateStudent />,
+      },
+      {
+        name: "All Students",
+        path: "allStudents",
+        element: <StudentsData />,
       },
       {
         name: "Create Admin",

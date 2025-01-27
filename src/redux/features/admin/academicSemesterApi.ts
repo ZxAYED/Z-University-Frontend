@@ -33,8 +33,15 @@ const academicSemesterApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data
             })
+        }),
+        getAllAcademicDepartment: builder.query({
+            query: () => ({
+                url: '/academic-departments',
+                method: 'GET',
+
+            })
         })
     })
 })
 
-export const { useGetAllSemesterQuery, useAddAcademicSemeserMutation } = academicSemesterApi
+export const { useGetAllSemesterQuery, useAddAcademicSemeserMutation, useGetAllAcademicDepartmentQuery } = academicSemesterApi
