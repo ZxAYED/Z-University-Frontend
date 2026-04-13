@@ -12,7 +12,8 @@ dist
 dist-ssr
 *.local
 .env.example
-
+.env
+.env*
 
 
 # Editor directories and files
@@ -26,3 +27,6 @@ dist-ssr
 *.sln
 *.sw?
 config.bat
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
